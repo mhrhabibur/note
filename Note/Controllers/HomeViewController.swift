@@ -17,8 +17,15 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.delegate = self
-        tableView.dataSource = self
+
+        settingTableView()
+        settingNavigation()
+    }
+    
+    // MARK: Navigation
+    private func settingNavigation() {
+        let title = "Notes"
+        navigationItem.title = title
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
@@ -56,6 +63,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         }
     }
 
+    // MARK: TableView
+    
+    private func settingTableView() {
+        tableView.delegate = self
+        tableView.dataSource = self
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes?.count ?? 0
     }

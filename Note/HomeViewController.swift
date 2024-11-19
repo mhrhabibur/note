@@ -8,19 +8,17 @@
 import UIKit
 import CoreData
 
-struct Note: Codable, Identifiable {
-    var id = UUID()
-    let title: String
-    let details: String
-}
-
-class HomeViewController: UITableViewController {
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+    
+    @IBOutlet weak var tableView: UITableView!
     
     var notes: [Notes]?
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.delegate = self
+        tableView.dataSource = self
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             barButtonSystemItem: .add,
             target: self,
@@ -58,23 +56,23 @@ class HomeViewController: UITableViewController {
         }
     }
 
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes?.count ?? 0
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let noteCell = tableView.dequeueReusableCell(withIdentifier: "NoteCell", for: indexPath)
         noteCell.textLabel?.text = "\(notes?[indexPath.row].title ?? "")"
         noteCell.detailTextLabel?.text = "\(notes?[indexPath.row].detail ?? "")"
         return noteCell
     }
 
-    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 50
     }
     
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let noteToDelete = notes?[indexPath.row]
             context.delete(noteToDelete!)
@@ -90,7 +88,7 @@ class HomeViewController: UITableViewController {
         }
     }
     
-    override func tableView(
+    func tableView(
         _ tableView: UITableView,
         moveRowAt sourceIndexPath: IndexPath,
         to destinationIndexPath: IndexPath
@@ -109,7 +107,7 @@ class HomeViewController: UITableViewController {
         }
     }
     
-    override func tableView(
+    func tableView(
         _ tableView: UITableView,
         didSelectRowAt indexPath: IndexPath
     ) {
